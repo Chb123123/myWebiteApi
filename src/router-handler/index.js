@@ -227,7 +227,7 @@ exports.updataUserName = (req, res) => {
 /**
  * @api {post} /api/updataUserName 修改用户名称
  * @apiName updataUserName
- * @apiGroup
+ * @apiGroup user
  * 
  * @apiParams {Number} userId 用户id
  * @apiParams {String} userName 用户名
@@ -262,7 +262,7 @@ exports.updataPassword = (req, res) => {
 /**
  * @api {post} /api/updataPassword 修改用户密码
  * @apiName updataPassword
- * @apiGroup
+ * @apiGroup user
  * 
  * @apiParams {Number} userId 用户id
  * @apiParams {String} oldPassword 旧密码
