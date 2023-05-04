@@ -86,7 +86,8 @@ exports.loginFunction = (req, res) => {
       res.send({
         status: 1,
         message: '登入成功',
-        token: 'Bearer ' + tokenStr
+        token: 'Bearer ' + tokenStr,
+        userId: results[0].userId
       })
     } else {
       res.cc('密码错误')
