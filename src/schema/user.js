@@ -42,3 +42,11 @@ exports.updataPassword_schema = {
     userId: joi.string()
   }
 }
+
+// 用户id 验证规则 不能为空
+const userId = joi.string().required()
+exports.req_userId_schema = {
+  query: {
+    userId
+  }
+}

@@ -1,5 +1,7 @@
 const db = require('../mysqlFrom/index')
 var formidable = require("formidable");
+// 格式化时间
+const formatTime = require('silly-datetime')
 const fs = require("fs");
 // 加密数据
 const bcrypt = require('bcryptjs')
@@ -319,6 +321,117 @@ exports.updataUserPic = (req, res) => {
  * @apiGroup user
  * 
  * @apiParams {String} files 文件流
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
+ * @apiSuccess {String} message 请求说明
+*/
+
+// 获取作品列表
+exports.getWordsList = (req, res) => {
+  const info = req.query
+  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId ORDER BY p.time DESC LIMIT ?, ?'
+  db.query(sqlStr, [parseInt(info.page) * parseInt(info.size), parseInt(info.size)], (err, results) => {
+    if(err) return res.cc(err)
+    res.send({
+      status: 1,
+      message: '成功',
+      queryData: results
+    })
+  })
+}
+
+/**
+ * @api {get} /api/getWordsList 获取作品列表
+ * @apiName getWordsList
+ * @apiGroup works
+ * 
+ * @apiParams {Number} page 页数
+ * @apiParams {Number} size 每页数量
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
+ * @apiSuccess {String} message 请求说明
+ * @apiSuccess {Array} queryData 请求数据
+*/
+
+// 获取用户发布的作品列表
+exports.getUserWorks = (req, res) => {
+  const info = req.query
+  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId and p.userId = ? ORDER BY p.time DESC LIMIT ?, ?'
+  db.query(sqlStr, [parseInt(info.userId), parseInt(info.page) * parseInt(info.size), parseInt(info.size)], (err, results) => {
+    if(err) return res.cc(err)
+    res.send({
+      status: 1,
+      message: '成功',
+      queryData: results
+    })
+  })
+}
+/**
+ * @api {get} /api/getUserWorks 获取用户发布的作品列表
+ * @apiName getUserWorks
+ * @apiGroup works
+ * 
+ * @apiParams {Number} userId 用户id
+ * @apiParams {Number} page 页数
+ * @apiParams {Number} size 每页数量
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
+ * @apiSuccess {String} message 请求说明
+ * @apiSuccess {Array} queryData 请求数据
+*/
+
+// 发布作品集 
+exports.releaseWorks = (req, res) => {
+  const info = req.body
+  const sqlStr = 'INSERT INTO portfolio SET worksTitle = ?, platform = ?, userId = ?, wordsAddress = ?, introduction = ?,  TIME = ?'
+  let newTime = formatTime.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
+  db.query(sqlStr, [info.title, parseInt(info.platform), parseInt(info.userId), info.wordsAddress, newTime], (err, results) => {
+    if(err) return res.cc(err)
+    if(results.affectedRows !== 1) res.cc('新增作品失败')
+    res.send({
+      status: 1,
+      message: '成功'
+    })
+  })
+}
+
+/**
+ * @api {Post} /api/releaseWorks 修改用户头像
+ * @apiName releaseWorks
+ * @apiGroup works
+ * 
+ * @apiParams {Number} userId 发布作者
+ * @apiParams {String} title 作品标题
+ * @apiParams {Number} platform 显示平台
+ * @apiParams {String} wordsAddress 作品链接
+ * @apiParams {String} introduction 作品简介
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
+ * @apiSuccess {String} message 请求说明
+ * @apiSuccess {Array} queryData 请求数据
+*/
+
+// 删除用户作品
+exports.removeWorks = (req, res) => {
+  const info = req.body
+  const sqlStr = 'DELETE FROM portfolio WHERE userId = ? AND id = ?'
+  db.query(sqlStr, [parseInt(info.userId), parseInt(info.id)], (err, results) => {
+    if(err) return res.cc(err)
+    if(results.affectedRows !== 1) return res.cc('删除文章失败')
+    res.send({
+      status: 1,
+      message: '删除成功'
+    })
+  })
+}
+
+/**
+ * @api {delete} /api/removeWorks 删除用户作品
+ * @apiName removeWorks
+ * @apiGroup works
+ * 
+ * @apiParams {Number} userId 发布作者
+ * @apiParams {Number} id 作品id
  * 
  * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
  * @apiSuccess {String} message 请求说明
