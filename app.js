@@ -6,7 +6,6 @@ const bodyParser = require('body-parser')
 const joi = require('joi')
 // 解析token 字符
 const config = require('./src/config.js')
-const jwt = require('jsonwebtoken')
 const expressJWT = require('express-jwt')
 
 // 解决跨域问题
@@ -74,13 +73,15 @@ const userInfo = require('./src/router/index')
 const homeInfo = require('./src/router/home')
 // 登入信息
 const loginInfo = require('./src/router/login.js')
-app.use('/api', homeInfo, userInfo)
+// 图片信息
+const imageInfo = require('./src/router/images.js')
+app.use('/api', homeInfo, userInfo, imageInfo)
+// 不需要 token 认证， 可直接调用
 app.use('/my', loginInfo)
 
 
 // 错误级别中间件
 app.use((err, req, res, next) => {
-  console.log(err)
   if (err instanceof joi.ValidationError) return res.cc(err, 0)
   if (err.name === 'UnauthorizedError') return res.cc('token认证失败', 2)
   if (err) return res.cc(err)

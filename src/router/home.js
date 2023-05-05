@@ -17,6 +17,4 @@ router.get('/getArticleList', homeInfo.getArticleList)
 router.delete('/reomveArticle', homeInfo.reomveArticle)
 // 上传文章图片
 router.post('/uploadImg', homeInfo.uploadImg)
-// 获取页面图片列表
-router.get('/getViewImage', homeInfo.getViewImage)
 module.exports = router

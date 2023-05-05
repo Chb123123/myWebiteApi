@@ -1,0 +1,13 @@
+{
+  "name": "网站api",
+  "version": "0.1.0",
+  "description": "开放 api 文档",
+  "title": "网站 API",
+  "url" : "http://127.0.0.1",
+  "sampleUrl": "http://127.0.0.1",
+  
+  "template": {
+  "withCompare": true,
+  "withGenerator": true
+  }
+}

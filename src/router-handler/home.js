@@ -2,8 +2,6 @@ const db = require('../mysqlFrom/index')
 const formatTime = require('silly-datetime')
 const fs = require("fs");
 var formidable = require("formidable");
-const jwt = require('jsonwebtoken')
-const secret = require('../config.js')
 
 // 主页 Tab 栏
 exports.getHomeTab = (req, res) => {
@@ -49,7 +47,7 @@ exports.getHomeFouseMap = (req, res) => {
  * @apiName getHomeFouseMap
  * @apiGroup Home
  * 
- * @apiParams userId 登入用户的id
+ * @apiParam userId 登入用户的id
  * 
  * @apiSuccess {Number} status 状态请求码
  * @apiSuccess {String} message 请求说明
@@ -75,11 +73,11 @@ exports.releaseArticle = (req, res) => {
 /**
  * @api {post} /api/releaseArticle 用户发布文章接口
  * @apiName releaseArticle
- * @apiGroup Home
+ * @apiGroup Article
  * 
- * @apiParams {Number} userId 用户id
- * @apiParams {String} article 用户发布的文章
- * @apiParams {String} title 文章标题
+ * @apiParam {Number} userId 用户id
+ * @apiParam {String} article 用户发布的文章
+ * @apiParam {String} title 文章标题
  * 
  * @apiSuccess {Number} status 请求状态码
  * @apiSuccess {String} message 请求说明
@@ -100,12 +98,12 @@ exports.updataArticle = (req, res) => {
 /**
  * @api {post} /api/updataArticle 修改已发布文章
  * @apiName updataArticle
- * @apiGroup Home
+ * @apiGroup Article
  * 
- * @apiParams {Number} userId 用户id
- * @apiParams {String} article 修改后的文章内容
- * @apiParams {Number} articleId 文章Id
- * @apiParams {String} title 修改后的文章标题
+ * @apiParam {Number} userId 用户id
+ * @apiParam {String} article 修改后的文章内容
+ * @apiParam {Number} articleId 文章Id
+ * @apiParam {String} title 修改后的文章标题
  * 
  * @apiSuccess {Number} status 请求状态码
  * @apiSuccess {String} message 请求说明
@@ -128,10 +126,10 @@ exports.reomveArticle = (req, res) => {
 /**
  * @api {delete} /api/reomveArticle 用户发布文章接口
  * @apiName reomveArticle
- * @apiGroup Home
+ * @apiGroup Article
  * 
- * @apiParams {Number} userId 用户id
- * @apiParams {Number} articleId 文章id
+ * @apiParam {Number} userId 用户id
+ * @apiParam {Number} articleId 文章id
  * 
  * @apiSuccess {Number} status 请求状态码
  * @apiSuccess {String} message 请求说明
@@ -186,73 +184,11 @@ exports.getArticleList = (req, res) => {
 /**
  * @api {get} /api/getArticleList 获取文章列表
  * @apiName getArticleList
- * @apiGroup Home
+ * @apiGroup Article
  * 
- * @apiParams {Number} [page] 页号
- * @apiParams {Number} [size] 数量
- * @apiParams {Number} userId 用户id
- * 
- * @apiSuccess {Number} status 请求状态码
- * @apiSuccess {String} message 请求说明
- * @apiSuccess {Array} queryData 返回的图片列表
-*/
-
-// 获取页面图片列表
-exports.getViewImage = (req, res) => {
-  let sqlStr = 'select * from viewImg limit ?, ?'
-  let info = req.query
-  if (!info.type) {
-    let total = 0
-    let getTypeCount = 'select count(*) as total from viewImg'
-    db.query(getTypeCount, (err, results) => {
-      if (err) return res.cc(err)
-      if (results.length === 0) return res.cc('查询数据失败')
-      total = results[0].total
-      db.query(sqlStr, [(parseInt(info.page) * parseInt(info.size)), parseInt(info.size)], (err, results) => {
-        if (err) return res.cc(err)
-        if (results.length === 0) return res.cc('图片数据不存在')
-        res.send({
-          status: 1,
-          message: '成功',
-          queryData: {
-            total: total,
-            results: results
-          }
-        })
-      })
-    })
-  } else {
-    let total = 0
-    let getTypeCount = 'select count(*) as total from viewImg where type = ?'
-    db.query(getTypeCount, info.type, (err, results) => {
-      if (err) return res.cc(err)
-      if (results.length === 0) return res.cc('查询数据失败')
-      total = results[0].total
-      let sqlStr1 = 'select * from viewImg where type = ? limit ?, ?'
-      db.query(sqlStr1, [info.type, (parseInt(info.page) * parseInt(info.size)), parseInt(info.size)], (err, results) => {
-        if (err) return res.cc(err)
-        if (results.length === 0) return res.cc('图片数据不存在')
-        res.send({
-          status: 1,
-          message: '成功',
-          queryData: {
-            total: total,
-            results: results
-          }
-        })
-      })
-    })
-  }
-}
-
-/**
- * @api {get} /api/getViewImage 获取页面图片列表
- * @apiName getViewImage
- * @apiGroup Home
- * 
- * @apiParams {Number} page 页号
- * @apiParams {Number} size 数量
- * @apiParams {String} type 图片类型
+ * @apiParam {Number} [page] 页号
+ * @apiParam {Number} [size] 数量
+ * @apiParam {Number} userId 用户id
  * 
  * @apiSuccess {Number} status 请求状态码
  * @apiSuccess {String} message 请求说明

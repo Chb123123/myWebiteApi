@@ -1,7 +1,7 @@
 {
   "name": "my-webiteApi",
   "version": "1.0.0",
-  "description": "",
+  "description": "apiDoc basic example",
   "main": "index.js",
   "apidoc": {
     "title": "Custom apiDoc browser title",

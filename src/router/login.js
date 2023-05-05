@@ -4,7 +4,7 @@ const expressJoi = require('@escook/express-joi')
 // 导入验证规则
 const { reg_login_schema, reg_check_schema } = require('../schema/user')
 
-const userRouter = require('../router-handler/index')
+const userRouter = require('../router-handler/login.js')
 
 // 注册功能
 router.post('/registerUser', expressJoi(reg_login_schema ), userRouter.registerUser)
