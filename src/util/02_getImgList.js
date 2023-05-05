@@ -1,3 +1,8 @@
+/**
+ * 该脚本爬取的是 彼岸图网 首页数据
+ * 通过网页数据筛选出需要的图片
+ */
+
 let requests = require('requests') // 请求包
 let fs = require('fs') // 读写文件
 const request = require('request')

@@ -1,3 +1,5 @@
+// 通过接口获取相应的数据 下载获取的图片
+
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')

@@ -57,18 +57,8 @@ app.use((req, res, next) => {
 })
 // 使用 .unless() 指定哪些接口不需要 就行token 验证
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] }))
-// app.use((req, res, next) => {
-//   expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] })
-//   if (!req.headers.token) return res.cc('验证token失败')
-//   // 验证token
-//   const token = req.headers.token.split(' ')[1]
-//   let payload = jwt.verify(token, config.jwtSecretKey)
-//   if (!payload) return res.cc('验证token失败')
-//   next()
-//   // expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] })
-// })
 // 用户信息
-const userInfo = require('./src/router/index')
+const userInfo = require('./src/router/user')
 // 网页信息
 const homeInfo = require('./src/router/home')
 // 登入信息
