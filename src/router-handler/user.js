@@ -23,7 +23,7 @@ exports.getUserInfo = (req, res) => {
 }
 
 /**
- * @api {get} /api/getUserInfo 用户信息
+ * @api {get} /api/getUserInfo 获取用户信息
  * @apiName getUserInfo
  * @apiGroup user
  * 

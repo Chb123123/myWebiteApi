@@ -156,7 +156,7 @@ exports.getArticleList = (req, res) => {
   const info = req.query
   if (!info.userId) return res.cc('缺少用户Id')
   if (info.page || info.size) {
-    const sqlStr = 'SELECT u.userId, u.article, u.articleId, u.title, u.time, i.user_pic, i.userName FROM userArticle AS u INNER JOIN userInfo AS i WHERE u.userId = i.userId AND u.userId = ? ORDER BY u.time DESC LIMIT ?,?'
+    const sqlStr = 'SELECT u.userId, u.article, u.articleId, u.title, u.time, i.user_pic, i.userName FROM userArticle AS u INNER JOIN userInfo AS i WHERE u.userId = i.userId AND u.userId = ? ORDER BY u.articleId DESC LIMIT ?,?'
     db.query(sqlStr, [parseInt(info.userId), (parseInt(info.page) * parseInt(info.size)), parseInt(info.size)], (err, results) => {
       if(err) return res.cc(err)
       if(results.length <= 0) return res.cc('获取文章数据为空')
@@ -167,7 +167,7 @@ exports.getArticleList = (req, res) => {
       })
     })
   } else {
-    const sqlStr = 'SELECT u.userId, u.article, u.articleId, u.title, u.time, i.user_pic, i.userName FROM userArticle AS u INNER JOIN userInfo AS i WHERE u.userId = i.userId AND u.userId = ? ORDER BY u.time DESC'
+    const sqlStr = 'SELECT u.userId, u.article, u.articleId, u.title, u.time, i.user_pic, i.userName FROM userArticle AS u INNER JOIN userInfo AS i WHERE u.userId = i.userId AND u.userId = ? ORDER BY u.articleId DESC'
     db.query(sqlStr, parseInt(info.userId), (err, results) => {
       if (err) return res.cc(err)
       if (results.length <= 0) return res.cc('获取文章列表失败')
@@ -199,7 +199,7 @@ exports.getArticleList = (req, res) => {
 // 获取作品列表
 exports.getWordsList = (req, res) => {
   const info = req.query
-  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId ORDER BY p.time DESC LIMIT ?, ?'
+  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId ORDER BY p.id DESC LIMIT ?, ?'
   db.query(sqlStr, [parseInt(info.page) * parseInt(info.size), parseInt(info.size)], (err, results) => {
     if(err) return res.cc(err)
     res.send({
@@ -226,7 +226,7 @@ exports.getWordsList = (req, res) => {
 // 获取用户发布的作品列表
 exports.getUserWorks = (req, res) => {
   const info = req.query
-  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId and p.userId = ? ORDER BY p.time DESC LIMIT ?, ?'
+  const sqlStr = 'SELECT p.id, p.worksTitle, p.introduction, p.platform, p.wordsAddress, p.time, i.user_pic, i.userName FROM portfolio AS p INNER JOIN userInfo AS i WHERE p.userId = i.userId and p.userId = ? ORDER BY p.id DESC LIMIT ?, ?'
   db.query(sqlStr, [parseInt(info.userId), parseInt(info.page) * parseInt(info.size), parseInt(info.size)], (err, results) => {
     if(err) return res.cc(err)
     res.send({

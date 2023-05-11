@@ -93,7 +93,7 @@ exports.loginFunction = (req, res) => {
   })
 }
 /**
- * @api {post} /my/loginFunction 用户信息
+ * @api {post} /my/loginFunction 用户登入
  * @apiName loginFunction
  * @apiGroup user
  * 
