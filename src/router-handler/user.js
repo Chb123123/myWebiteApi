@@ -5,6 +5,7 @@ const formatTime = require('silly-datetime')
 const fs = require("fs");
 // 加密数据
 const bcrypt = require('bcryptjs')
+const axios = require('axios')
 
 
 // 获取用户信息
@@ -23,9 +24,12 @@ exports.getUserInfo = (req, res) => {
 }
 
 /**
- * @api {get} /api/getUserInfo 获取用户信息
+ * @api {get} /api/userInfo 获取用户信息
  * @apiName getUserInfo
  * @apiGroup user
+ * 
+ * @apiParam {Number} userId 用户id
+ * @apiParam {String} accountNumber 用户账号
  * 
  * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
  * @apiSuccess {String} message 请求说明
@@ -222,3 +226,45 @@ exports.updataUserPic = (req, res) => {
  * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
  * @apiSuccess {String} message 请求说明
 */
+
+
+// 修改用户信息
+exports.updateUserInfo = (req, res) => {
+  const userInfo = req.body
+  const sqlStr = 'update userInfo set userName = ?, user_pic = ?, user_signature = ? WHERE userId = ?'
+  db.query(sqlStr, [userInfo.userName, userInfo.user_pic, userInfo.user_signature, parseInt(userInfo.userId)], (err, results) => {
+    if(err) return res.cc(err)
+    if(results.affectedRows !== 1) return res.cc('修改用户信息失败')
+    res.send({
+      status: 1,
+      message: '修改用户信息成功'
+    })
+  })
+}
+
+/**
+ * @api {post} /api/updataUserInfo 修改用户信息
+ * @apiName updataUserInfo
+ * @apiGroup user
+ * 
+ * @apiParam {String} userName 用户名称
+ * @apiParam {Number} userId 用户ID
+ * @apiParam {String} user_pic 用户头像地址
+ * @apiParam {String} user_signature 个性化名言
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
+ * @apiSuccess {String} message 请求说明
+*/
+
+// 查询天气详情
+exports.getWeather = (req, res) => {
+  axios({
+    method: 'GET',
+    url: 'http://www.baidu.com/home/other/data/weatherInfo?'
+  }).then(request => {
+    res.send({
+      status: 1,
+      data: request.data.data.weather.content
+    })
+  })
+}

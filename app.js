@@ -55,6 +55,10 @@ app.use((req, res, next) => {
   res.website = 'http://127.0.0.1:80'
   next()
 })
+app.use((req, res, next) => {
+  console.log(req.url)
+  next()
+})
 // 使用 .unless() 指定哪些接口不需要 就行token 验证
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] }))
 // 用户信息

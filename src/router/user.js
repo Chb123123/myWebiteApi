@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 // const upload = require('../util/updateUserPic')
 
-const { reg_userName_schema, updataPassword_schema } = require('../schema/user')
+const { reg_userName_schema, updataPassword_schema, reg_userInfo_schema } = require('../schema/user')
 const expressJoi = require('@escook/express-joi')
 const userRouter = require('../router-handler/user')
 
@@ -22,4 +22,8 @@ router.post('/updataSignature', userRouter.updataSignature)
 router.post('/uploadUserPic', userRouter.uploadUserPic)
 // 修改用户头像
 router.post('/updataUserPic', userRouter.updataUserPic)
+// 修改用户信息
+router.post('/updataUserInfo', expressJoi(reg_userInfo_schema), userRouter.updateUserInfo)
+// 查询天气
+router.get('/getWeather', userRouter.getWeather)
 module.exports = router

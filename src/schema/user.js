@@ -50,3 +50,13 @@ exports.req_userId_schema = {
     userId
   }
 }
+
+// 验证用户信息
+exports.reg_userInfo_schema = {
+  body: {
+    userId: joi.string().required(),
+    userName: joi.string().required(),
+    user_pic: joi.string().required(),
+    user_signature: joi.string().min(6).max(20).required()
+  }
+}
