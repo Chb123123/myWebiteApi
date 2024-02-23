@@ -8,7 +8,7 @@ const db = require('../mysqlFrom/index')
 
 let list = []
 let flag = true
-let num = 630
+let num = 1
 function main() {
   console.log(num)
   axios.get(`https://api.apiopen.top/api/getImages?page=${num}&size=20`).then(res => {

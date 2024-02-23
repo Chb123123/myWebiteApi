@@ -7,7 +7,7 @@ let requests = require('requests') // 请求包
 let fs = require('fs') // 读写文件
 const request = require('request')
 
-let num = 10
+let num = 5
 function main() {
   num++
   console.log(`当前在${num}页`)
