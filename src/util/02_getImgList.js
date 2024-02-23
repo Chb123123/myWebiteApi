@@ -6,7 +6,7 @@
 let requests = require('requests') // 请求包
 let fs = require('fs') // 读写文件
 const request = require('request')
-
+// 设置开始爬取的图片页数
 let num = 5
 function main() {
   num++
