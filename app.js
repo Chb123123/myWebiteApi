@@ -8,6 +8,9 @@ const joi = require('joi')
 const config = require('./src/config.js')
 const expressJWT = require('express-jwt')
 
+// 默认服务启动路径
+const beseUrl = 'http://127.0.0.1:80'
+
 // 解决跨域问题
 app.use(cors())
 // 解析body和query内的数据
@@ -52,7 +55,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
-  res.website = 'http://127.0.0.1:80'
+  res.website = beseUrl
   next()
 })
 app.use((req, res, next) => {
@@ -82,6 +85,6 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(80, function () {
-  console.log('http://127.0.0.1:80')
+app.listen(80, beseUrl, function () {
+  console.log(`${beseUrl}启动成功`)
 })
