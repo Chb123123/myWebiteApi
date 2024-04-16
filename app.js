@@ -9,7 +9,7 @@ const config = require('./src/config.js')
 const expressJWT = require('express-jwt')
 
 // 默认服务启动路径
-const beseUrl = 'http://127.0.0.1:80'
+const beseUrl = '127.0.0.1'
 
 // 解决跨域问题
 app.use(cors())
