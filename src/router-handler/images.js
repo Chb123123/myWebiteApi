@@ -31,7 +31,7 @@ exports.getViewImage = (req, res) => {
       if (err) return res.cc(err)
       if (results.length === 0) return res.cc('查询数据失败')
       total = results[0].total
-      let sqlStr1 = 'select * from viewImg where type = ? limit ?, ?'
+      let sqlStr1 = "select id, title, CONCAT_WS('','http://127.0.0.1',url) url, type from viewImg where type = ? limit ?, ?"
       db.query(sqlStr1, [info.type, (parseInt(info.page) * parseInt(info.size)), parseInt(info.size)], (err, results) => {
         if (err) return res.cc(err)
         if (results.length === 0) return res.cc('图片数据不存在')
