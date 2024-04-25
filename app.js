@@ -62,7 +62,7 @@ app.use((req, res, next) => {
   console.log(req.url)
   next()
 })
-// 使用 .unless() 指定哪些接口不需要 就行token 验证
+// 使用 .unless() 指定哪些接口不需要 就行token 验证 //uploadImg
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] }))
 // 用户信息
 const userInfo = require('./src/router/user')
@@ -72,9 +72,11 @@ const homeInfo = require('./src/router/home')
 const loginInfo = require('./src/router/login.js')
 // 图片信息
 const imageInfo = require('./src/router/images.js')
+// 上传文件信息
+const uploadInfo = require('./src/router/uploadFile.js')
 app.use('/api', homeInfo, userInfo, imageInfo)
 // 不需要 token 认证， 可直接调用
-app.use('/my', loginInfo)
+app.use('/my', loginInfo, uploadInfo)
 
 
 // 错误级别中间件

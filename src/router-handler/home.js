@@ -33,7 +33,7 @@ exports.getHomeFouseMap = (req, res) => {
   let sqlStr = 'select id, imgUrl, imgText from mapTable where userId = ?'
   db.query(sqlStr, parseFloat(req.query.userId), (err, results) => {
     if (err) return res.cc(err)
-    if (results.length === 0) res.cc('不存在图片')
+    if (results.length === 0) return res.cc('不存在图片')
     res.send({
       status: 1,
       message: '成功',
@@ -257,7 +257,7 @@ exports.releaseWorks = (req, res) => {
   let newTime = formatTime.format(new Date(), 'YYYY-MM-DD HH:mm:ss')
   db.query(sqlStr, [info.title, parseInt(info.platform), parseInt(info.userId), info.wordsAddress, newTime], (err, results) => {
     if(err) return res.cc(err)
-    if(results.affectedRows !== 1) res.cc('新增作品失败')
+    if(results.affectedRows !== 1) return res.cc('新增作品失败')
     res.send({
       status: 1,
       message: '成功'
