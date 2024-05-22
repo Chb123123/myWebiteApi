@@ -12,7 +12,7 @@ const axios = require('axios')
 exports.getUserInfo = (req, res) => {
   const userInfo = req.query
   const sqlStr = 'select userName, userId, user_pic, user_signature, accountNumber from userInfo where userId = ? and accountNumber = ?'
-  db.query(sqlStr, [parseFloat(userInfo.userId), userInfo.accountNumber], (err, results) => {
+  db.query(sqlStr, [res.userId, userInfo.accountNumber], (err, results) => {
     if (err) return res.cc(err)
     if (results.length < 1) return res.cc('用户不存在')
     res.send({
@@ -28,7 +28,6 @@ exports.getUserInfo = (req, res) => {
  * @apiName getUserInfo
  * @apiGroup user
  * 
- * @apiParam {Number} userId 用户id
  * @apiParam {String} accountNumber 用户账号
  * 
  * @apiSuccess {Number} status 请求状态 1 表示成功 0 表示失败
@@ -90,10 +89,10 @@ exports.updataSignature = (req, res) => {
   const sqlStr = 'update userInfo set user_signature = ? where userId = ?'
   let sqlStr1 = 'select * from userInfo where userId = ?'
   // 判断用户id是否存在
-  db.query(sqlStr1, parseInt(userInfo.userId), (err, results) => {
+  db.query(sqlStr1, res.userId, (err, results) => {
     if (err) return res.cc(err)
     if (results.length === 0) return res.cc('用户不存在')
-    db.query(sqlStr, [userInfo.signature, parseInt(userInfo.userId)], (err, results) => {
+    db.query(sqlStr, [userInfo.signature, res.userId], (err, results) => {
       if (err) return res.cc(err)
       if (results.affectedRows !== 1) return res.cc('修改用户名失败')
       res.cc('修改用户名成功', 1)
@@ -107,7 +106,6 @@ exports.updataSignature = (req, res) => {
  * @apiName updataSignature
  * @apiGroup user
  * 
- * @apiParam {Number} userId 用户id
  * @apiParam {String} signature 用户签名
  * 
  * @apiSuccess {Number} status 请求状态码
@@ -118,7 +116,7 @@ exports.updataSignature = (req, res) => {
 exports.updataUserName = (req, res) => {
   const user = req.body
   const sqlStr = 'update userInfo set userName = ? where userId = ?'
-  db.query(sqlStr, [user.userName, parseInt(user.userId)], (err, results) => {
+  db.query(sqlStr, [user.userName, res.userId], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('修改名称失败')
     res.send({
@@ -133,7 +131,6 @@ exports.updataUserName = (req, res) => {
  * @apiName updataUserName
  * @apiGroup user
  * 
- * @apiParam {Number} userId 用户id
  * @apiParam {String} userName 用户名
  * 
  * @apiSuccess {Number} status 请求状态码
@@ -144,7 +141,7 @@ exports.updataUserName = (req, res) => {
 exports.updataPassword = (req, res) => {
   const user = req.body
   const sql = 'select password from userInfo where userId = ?'
-  db.query(sql, parseInt(user.userId), (err, results) => {
+  db.query(sql, res.userId, (err, results) => {
     if (err) return res.cc(err)
     if (results.length <= 0) return res.cc('账号不存在')
     const compareResult = bcrypt.compareSync(req.body.oldPassword, results[0].password)
@@ -152,7 +149,7 @@ exports.updataPassword = (req, res) => {
     // 旧密码正确 修改用户密码
     user.newPassword = bcrypt.hashSync(user.newPassword, 10)
     const sqlStr = 'update userInfo set password = ? where userId = ?'
-    db.query(sqlStr, [user.newPassword, parseInt(user.userId)], (err, results) => {
+    db.query(sqlStr, [user.newPassword, res.userId], (err, results) => {
       if (err) return res.cc(err)
       if (results.affectedRows !== 1) return res.cc('修改密码失败')
       res.send({
@@ -168,7 +165,6 @@ exports.updataPassword = (req, res) => {
  * @apiName updataPassword
  * @apiGroup user
  * 
- * @apiParam {Number} userId 用户id
  * @apiParam {String} oldPassword 旧密码
  * @apiParam {String} newPassword 新密码
  * 
@@ -206,7 +202,7 @@ exports.uploadUserPic = (req, res) => {
 exports.updataUserPic = (req, res) => {
   const userInfo = req.body
   const sqlStr = 'UPDATE userInfo SET user_pic = ? WHERE userId = ?'
-  db.query(sqlStr, [userInfo.userPic, parseInt(userInfo.userId)], (err, results) => {
+  db.query(sqlStr, [userInfo.userPic, res.userId], (err, results) => {
     if (err) return res.cc(err)
     if (results.affectedRows !== 1) return res.cc('修改头像失败')
     res.send({
@@ -232,7 +228,7 @@ exports.updataUserPic = (req, res) => {
 exports.updateUserInfo = (req, res) => {
   const userInfo = req.body
   const sqlStr = 'update userInfo set userName = ?, user_pic = ?, user_signature = ? WHERE userId = ?'
-  db.query(sqlStr, [userInfo.userName, userInfo.user_pic, userInfo.user_signature, parseInt(userInfo.userId)], (err, results) => {
+  db.query(sqlStr, [userInfo.userName, userInfo.user_pic, userInfo.user_signature, res.userId], (err, results) => {
     if(err) return res.cc(err)
     if(results.affectedRows !== 1) return res.cc('修改用户信息失败')
     res.send({
@@ -248,7 +244,6 @@ exports.updateUserInfo = (req, res) => {
  * @apiGroup user
  * 
  * @apiParam {String} userName 用户名称
- * @apiParam {Number} userId 用户ID
  * @apiParam {String} user_pic 用户头像地址
  * @apiParam {String} user_signature 个性化名言
  * 

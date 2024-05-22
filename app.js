@@ -7,6 +7,7 @@ const joi = require('joi')
 // 解析token 字符
 const config = require('./src/config.js')
 const expressJWT = require('express-jwt')
+const jwt = require('jsonwebtoken')
 
 // 默认服务启动路径
 const beseUrl = '127.0.0.1'
@@ -55,11 +56,16 @@ app.use((req, res, next) => {
   next()
 })
 app.use((req, res, next) => {
-  res.website = beseUrl
+  res.website = `http://${beseUrl}`
   next()
 })
+
 app.use((req, res, next) => {
   console.log(req.url)
+  const token = req.rawHeaders[1].replace("Bearer ", "")
+  let verifyToken = jwt.verify(token, config.jwtSecretKey)
+  res.userTokenInfo = verifyToken
+  res.userId = parseInt(verifyToken.userId)
   next()
 })
 // 使用 .unless() 指定哪些接口不需要 就行token 验证 //uploadImg
