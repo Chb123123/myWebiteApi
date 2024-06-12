@@ -30,6 +30,16 @@ app.use((req, res, next) => {
   }
   next()
 })
+app.use((req, res, next) => {
+  res.ss = function (data) {
+    res.send({
+      status: 1,
+      message: "成功",
+      queryData: data
+    })
+  }
+  next()
+})
 // 判断数据是否合理
 app.use((req, res, next) => {
   res.estimate = function (obj, itemList) {
@@ -60,16 +70,24 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use((req, res, next) => {
-  console.log(req.url)
-  const token = req.rawHeaders[1].replace("Bearer ", "")
-  let verifyToken = jwt.verify(token, config.jwtSecretKey)
-  res.userTokenInfo = verifyToken
-  res.userId = parseInt(verifyToken.userId)
-  next()
-})
 // 使用 .unless() 指定哪些接口不需要 就行token 验证 //uploadImg
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/my\//] }))
+
+app.use((req, res, next) => {
+  console.log(req.url)
+  const path = /^\/my\//
+  let url = req.url.split("?")
+  let flag = path.test(url[0])
+  if(flag) {
+    next()
+  } else {
+    const token = req.headers.authorization.replace("Bearer ", "")
+    let verifyToken = jwt.verify(token, config.jwtSecretKey)
+    res.userTokenInfo = verifyToken
+    res.userId = parseInt(verifyToken.userId)
+    next()
+  }
+})
 // 用户信息
 const userInfo = require('./src/router/user')
 // 网页信息
@@ -80,7 +98,9 @@ const loginInfo = require('./src/router/login.js')
 const imageInfo = require('./src/router/images.js')
 // 上传文件信息
 const uploadInfo = require('./src/router/uploadFile.js')
-app.use('/api', homeInfo, userInfo, imageInfo)
+// 系统后台树
+const sysTemInfo = require('./src/router/system/sysUser.js')
+app.use('/api', homeInfo, userInfo, imageInfo, sysTemInfo)
 // 不需要 token 认证， 可直接调用
 app.use('/my', loginInfo, uploadInfo)
 
