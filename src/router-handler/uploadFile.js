@@ -8,7 +8,7 @@ exports.uploadImg = (req, res) => {
     if(!files.file) return res.cc('上传的图片不存在')
     let fileType = files.file.originalFilename.split(".")
     let type = fileType[fileType.length - 1]
-    let imgType = ["jpg","png","gif","psd","tiff","BMP","eps","svg","jpge",]
+    let imgType = ["jpg","png","gif","psd","tiff","BMP","eps","svg","jpeg"]
     let flag = imgType.some(item => {
       if(type === item) {
         return true
