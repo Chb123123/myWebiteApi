@@ -411,3 +411,52 @@ exports.getRoleList = async (req, res) => {
     })
   })
 }
+
+function getTotal() {
+  return new Promise(resolve => {
+    const sql = 'select count(*) as num from tb_account_ronk'
+    db.query(sql, (err, results) => {
+      if(err) resolve(0);
+      console.log(results[0].num)
+      resolve(results[0].num)
+    })
+  })
+
+}
+
+// 分页获取角色列表
+exports.getRolePage = async (req, res) => {
+  const data = req.query
+  let flag = !isNaN(parseFloat(data.size)) && isFinite(data.size)
+  let flag1 = !isNaN(parseFloat(data.page)) && isFinite(data.page)
+  let sql = `SELECT * FROM tb_account_ronk`
+  if(flag && flag1) {
+    let num = (parseInt(data.page) - 1) * parseInt(data.size)
+    sql = `SELECT * FROM tb_account_ronk LIMIT ${num}, ${parseInt(data.size)}`
+  }
+  db.query(sql, async (err, results) => {
+    if(err) return res.cc('获取数据失败');
+    let total = await getTotal()
+    const queryData = {
+      rows: results,
+      total: total,
+    }
+    res.send({
+      status: 1,
+      message: "成功",
+      queryData: queryData
+    })
+  })
+}
+/**
+ * @api {get} /api/role/page 查询用户权限节点
+ * @apiName getRolePage
+ * @apiGroup System
+ * 
+ * @apiParam {Number} size 页号
+ * @apiParam {Number} page 数量
+ * 
+ * @apiSuccess {Number} status 请求状态 1 表示请求成功， 0 表示请求失败
+ * @apiSuccess {String} message 请求说明
+ * @apiSuccess {Array} queryData 用户详情
+*/

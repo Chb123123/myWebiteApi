@@ -28,6 +28,8 @@ router.get('/user/page', userHandler.getUserList)
 router.delete('/user/del', userHandler.delectUserInfo)
 // 修改用户
 router.post('/user/edit', userHandler.editUserInfo)
+// 分页获取角色列表
+router.get('/role/page', userLimits.getRolePage)
 // 获取角色列表
 router.get('/role/list', userLimits.getRoleList)
 module.exports = router
