@@ -100,7 +100,9 @@ const imageInfo = require('./src/router/images.js')
 const uploadInfo = require('./src/router/uploadFile.js')
 // 系统后台树
 const sysTemInfo = require('./src/router/system/sysUser.js')
-app.use('/api', homeInfo, userInfo, imageInfo, sysTemInfo)
+// 文章信息
+const generalInfo = require('./src/router/system/general.js')
+app.use('/api', homeInfo, userInfo, imageInfo, sysTemInfo, generalInfo)
 // 不需要 token 认证， 可直接调用
 app.use('/my', loginInfo, uploadInfo)
 
